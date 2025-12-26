@@ -27,27 +27,84 @@
         <div class="container">
             <!-- title -->
             <header class="post-header">
-                <h1>Your First Blog Post Title</h1>
-                <span class="post-date">December 18, 2025</span>
+                <h1>Circuit Simulator & Hierarchical Basis Function</h1>
+                <span class="post-date">Documented 12/26/2025</span>
             </header>
 
             <!-- article -->
             <div class="post-body">
                 <p>
-                    Welcome to my first blog post.
+                    CQEM (The Computational Quantum ElectroMagnetics lab) is lead by <a href="https://engineering.purdue.edu/CQEM/people" target="_blank">Prof. Roth</a> at the Purdue University. I am very glad that I have this chance to work with them as undergraduate researcher. 
+                </p>
+                <p>
+                    The first work I have done include modifying the Circuit Simulator front-end GUI to work together with the back-end simulator designed by Jack. 
+                </p>
+                <p>
+                    Another work is p-refinement for FEM basis function, which include using higher order basis function to improve the accuracy of the simulation. 
                 </p>
 
-                <h2>Section Heading</h2>
-
-                <h2>Adding Images</h2>
+                
+                <h2>Hierarchical Basis Functions in Finite Element Method</h2>
+                <p>The understanding of the FEM is based on chapter 3 in the lecture note of <a href="../files/CQEM_lecture_note.pdf" target="_blank">ECE 61800: Numerical Electromagnetics by Prof. Roth</a> and understanding of the hierarchical basis function is based chapter 3.7 in <a href="../files/CQEM_Jin_FEM_Hierarchical.pdf">The Finite Element Method in Electromagnetics (Wiley) by Prof. Jin</a>. </p>
 
                 <p>
-                    include images
+                    The both of higher-order vector and scalar basis functions are called Hierarchical Basis Functions, which is widely used in finite element analysis of the electromagnetic field. It has three requiremets when implementing:
                 </p>
 
-                <!-- Example image (uncomment and replace path)
-                <img src="../images/blog/example.jpg" alt="Description" class="post-image">
-                -->
+                <ul>
+                    <li>They should be linearly independent and complete to the desired order. Therefore, the number of hierarchical basis functions for a given order is the same as the number of interpolatory basis functions.</li>
+                    <li>They should make it easy to enforce the interelement continuity for the expanded quantity in the finite element formulation. The interelement continuity refers to the continuity at the nodes, across the edges, and across the faces of the elements.</li>
+                    <li>The basis functions of a given order should explicitly include those of lower orders. In other words, the hierarchical basis functions of order p should retain all the basis functions of order p-1 and then add a few new ones necessary to make them complete to order p.</li>
+                </ul>
+
+                <p>By implementing it, we will gain two advantages:</p>
+                <ul>
+                    <li>It permits the use of basis functions of different orders in a single finite element mesh, which can facilitate the implementation of adaptive p-refinement </li>
+                    <li> Second, it provides a foundation in the development of multigrid and multilevel solvers or preconditioners for an efficient solution of finite element equations</li>
+                </ul>
+                <p>For my implementation, we mainly take advantage of the first one. The implementation for: scalar and gradient of scalar; and vector and curl of vector are varified by using finite difference method.</p>
+                <p>The simulation result for eivenvalues on EM for a cavity hole in the infinite plane is displayed below </p>
+
+                <img src="../images/projects/cqem1.png" alt="CQEM Simulation Results" class="post-image">
+                <img src="../images/projects/cqem2.png" alt="CQEM Analysis" class="post-image">
+
+                <p>The simulation include 200 runs for each percentage of order 1 inclusion. The x-axis means the proportion of order 1 included. 0 means purely order 2, and 1 means purely order1. The y-axis means the value of eigenvalue in GHz, where the dashed line means analytical result. The third order is not simulated because the indexing is not finished this semester.
+                </p>
+                <p>
+                    By observing purely second order and purely first order, we can tell that fully second order out-performed the first order. However, we see the mix of first and second order has unexpected result, where there's a decrease in accuracy at the beginning where we just start adding in second order. I think this is because 200 runs is too little, and, in some cases, we have the first order on complex geometries and second order on simple geometries, but this is only a guess. I don't know why there's a decrease in accuracy. This can be figured out by researchers next semester. 
+                </p>
+                
+                <h2>Gaussian Quadrature Rule</h2>
+                <p>The implementation of Gaussian Quadrature Rule is based on <a href="../files/CQEM_Quadrature.pdf">This</a> paper.</p>
+                <p>This feature is implemented to simplify the calculation of K matrix (3.45) in <a href="../files/CQEM_lecture_note.pdf" target="_blank">note</a>, where the basis function is evaluated with each of simplex coordinate dedinition as descriped in Chapter 3.6 and equation (3.33) in the <a href="../files/CQEM_lecture_note.pdf" target="_blank">note</a>. </p>
+                <p>
+                    We are able to calculate integration form of K matrix in summation form at specific integration points for accurate result, according to the paper.
+                </p>
+                
+                <h2>Circuit Simulator</h2>
+
+                <p>
+                    This simulator supports these features:
+                </p>
+
+                <ul>
+                    <li>Output Netlist for desired components assembled</li>
+                    <li>Able to save schematics for future use</li>
+                    <li>A top-bar contains all supported functionalities</li>
+                    <li>A separate page for displaying simulation results</li>
+                </ul>
+                <p>
+                    The code is well-structured and well-commented for future developers adding features.
+                </p>
+                <p>
+                    The following demo shows basic functionalities.
+                </p>
+
+                <video controls style="width: 100%; max-width: 800px;">
+                    <source src="../videos/CQEM_simulator_demo.mp4" type="video/mp4">
+                    Your browser does not support the video display.
+                </video>
+
 
             </div>
         </div>
