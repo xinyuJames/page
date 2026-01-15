@@ -5,4 +5,4 @@
 
 ### Intention
 - I want to use this page to document projects I have done.
-- or Just for fun.
+- or Just for fun. https://xinyujames.github.io/page/
